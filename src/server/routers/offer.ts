@@ -9,19 +9,18 @@ import { z } from 'zod';
 import { prisma } from '~/server/prisma';
 
 /**
- * Default selector for Post.
+ * Default selector for Offer.
  * It's important to always explicitly say which fields you want to return in order to not leak extra information
- * @see https://github.com/prisma/prisma/issues/9353
  */
-const defaultPostSelect = Prisma.validator<Prisma.PostSelect>()({
+const defaultOfferSelect = Prisma.validator<Prisma.OfferSelect>()({
   id: true,
-  title: true,
-  text: true,
+  offerId: true,
+  responsiblePerson: true,
   createdAt: true,
-  updatedAt: true,
+  lastEditedAt: true,
 });
 
-export const postRouter = router({
+export const offerRouter = router({
   list: publicProcedure
     .input(
       z.object({
@@ -39,9 +38,8 @@ export const postRouter = router({
       const limit = input.limit ?? 50;
       const { cursor } = input;
 
-      const items = await prisma.post.findMany({
-        select: defaultPostSelect,
-        // get an extra item at the end which we'll use as next cursor
+      const items = await prisma.offer.findMany({
+        select: defaultOfferSelect,
         take: limit + 1,
         where: {},
         cursor: cursor
@@ -75,31 +73,31 @@ export const postRouter = router({
     )
     .query(async ({ input }) => {
       const { id } = input;
-      const post = await prisma.post.findUnique({
+      const offer = await prisma.offer.findUnique({
         where: { id },
-        select: defaultPostSelect,
+        select: defaultOfferSelect,
       });
-      if (!post) {
+      if (!offer) {
         throw new TRPCError({
           code: 'NOT_FOUND',
-          message: `No post with id '${id}'`,
+          message: `No offer with id '${id}'`,
         });
       }
-      return post;
+      return offer;
     }),
   add: publicProcedure
     .input(
       z.object({
         id: z.string().uuid().optional(),
-        title: z.string().min(1).max(32),
-        text: z.string().min(1),
+        offerId: z.string().min(1).max(32),
+        responsiblePerson: z.string().min(1),
       }),
     )
     .mutation(async ({ input }) => {
-      const post = await prisma.post.create({
+      const offer = await prisma.offer.create({
         data: input,
-        select: defaultPostSelect,
+        select: defaultOfferSelect,
       });
-      return post;
+      return offer;
     }),
 });

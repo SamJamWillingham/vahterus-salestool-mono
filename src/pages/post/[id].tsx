@@ -3,41 +3,41 @@ import { useRouter } from 'next/router';
 import { NextPageWithLayout } from '~/pages/_app';
 import { RouterOutput, trpc } from '~/utils/trpc';
 
-type PostByIdOutput = RouterOutput['post']['byId'];
+type PostByIdOutput = RouterOutput['offer']['byId'];
 
-function PostItem(props: { post: PostByIdOutput }) {
-  const { post } = props;
+function PostItem(props: { offer: PostByIdOutput }) {
+  const { offer } = props;
   return (
     <>
-      <h1>{post.title}</h1>
-      <em>Created {post.createdAt.toLocaleDateString('en-us')}</em>
+      <h1>{offer.offerId}</h1>
+      <em>Created {offer.createdAt.toLocaleDateString('en-us')}</em>
 
-      <p>{post.text}</p>
+      <p>{offer.responsiblePerson}</p>
 
       <h2>Raw data:</h2>
-      <pre>{JSON.stringify(post, null, 4)}</pre>
+      <pre>{JSON.stringify(offer, null, 4)}</pre>
     </>
   );
 }
 
 const PostViewPage: NextPageWithLayout = () => {
   const id = useRouter().query.id as string;
-  const postQuery = trpc.post.byId.useQuery({ id });
+  const offerQuery = trpc.offer.byId.useQuery({ id });
 
-  if (postQuery.error) {
+  if (offerQuery.error) {
     return (
       <NextError
-        title={postQuery.error.message}
-        statusCode={postQuery.error.data?.httpStatus ?? 500}
+        title={offerQuery.error.message}
+        statusCode={offerQuery.error.data?.httpStatus ?? 500}
       />
     );
   }
 
-  if (postQuery.status !== 'success') {
+  if (offerQuery.status !== 'success') {
     return <>Loading...</>;
   }
-  const { data } = postQuery;
-  return <PostItem post={data} />;
+  const { data } = offerQuery;
+  return <PostItem offer={data} />;
 };
 
 export default PostViewPage;

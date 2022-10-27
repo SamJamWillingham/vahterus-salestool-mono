@@ -19,7 +19,8 @@
     "baseUrl": ".",
     "paths": {
       "~/*": ["src/*"]
-    }
+    },
+    "types": ["playwright", "node"]
   },
   "include": [
     "next-env.d.ts",
@@ -28,5 +29,7 @@
     "./*.js",
     "./src/**/*.js"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules",
+  ]
 }

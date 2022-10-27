@@ -8,15 +8,15 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
-  const firstPostId = '5c03994c-fc16-47e0-bd02-d218a370a078';
-  await prisma.post.upsert({
+  const firstOfferId = '5c03994c-fc16-47e0-bd02-d218a370a078';
+  await prisma.offer.upsert({
     where: {
-      id: firstPostId,
+      id: firstOfferId,
     },
     create: {
-      id: firstPostId,
-      title: 'First Post',
-      text: 'This is an example post generated from `prisma/seed.ts`',
+      id: firstOfferId,
+      offerId: 'a21-001-001',
+      responsiblePerson: 'Samantha Willingham',
     },
     update: {},
   });
